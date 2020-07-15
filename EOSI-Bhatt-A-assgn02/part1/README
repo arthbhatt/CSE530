@@ -1,0 +1,47 @@
+Author: Arth Bhatt (ASU ID: 1215361875)
+
+Open a terminal and navigate to this (EOSI-Bhatt-A-assgn02/part1) folder
+
+How to make?
+Run the Makefile command to generate the binaries for kernel module and the test program
+To run the Makefile, type "make" in the terminal after navigating to this folder.
+
+How to run?
+1) Copy the binaries(namely hcsr_drv.ko and hcsr_tester) to Intel Galileo Gen2 Board.
+	Also copy the test_cases.sh file if you want to run that. 
+	More information about this script is written in the Test-Cases section below.
+   To copy, you can use the scp command. For example,
+	scp hcsr_drv.ko hcsr_tester root@192.168.1.5:/home/root
+
+2) Insert the kernel module using insmod
+	insmod /home/root/hcsr_drv.ko
+   This will create two device files in the /dev folder
+   More number of devices can be created by using device_count parameter
+
+3) Run hcsr_tester to test the device driver
+	./hcsr_tester <device-file-path> ioctl 1 <trigger_pin> <echo_pin> --> To configure pins
+	./hcsr_tester <device-file-path> ioctl 4 <number_samples> <sampling_period_in_ms> --> To set measurement parameters
+	./hcsr_tester <device-file-path> write 0 --> To measure distance
+	./hcsr_tester <device-file-path> write 1 --> To clear buffer and measure distance
+	./hcsr_tester <device-file-path> read  --> To read the buffer
+
+	Example:
+		./hcsr_tester /dev/HCSR_0 ioctl 1 0 1
+		./hcsr_tester /dev/HCSR_0 ioctl 4 4 100
+		./hcsr_tester /dev/HCSR_0 write 0
+		./hcsr_tester /dev/HCSR_0 read
+
+
+To remove the driver, type "rmmod hcsr_drv.ko" in the terminal.
+
+Test-Cases:
+To successully run this script, make sure that the hcsr_tester and hcsr_drv.ko binaries are in the sample location.
+Also make sure that the script is executable. If not, run chmod +x test_cases.sh .
+Driver is insmoded by the script.
+A test_cases.sh script is provided which runs some testcases.
+It runs the userspace test program with some particular inputs.
+At the start of the script, different parameters can be configure such as the device_name, trigger_pin, echo_pin, m, delta.
+
+While running the testcases, you can also monitor the dmesg log to get some useful prints
+
+Thank you

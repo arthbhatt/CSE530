@@ -1,0 +1,33 @@
+Author: Arth Bhatt (ASU ID: 1215361875)
+
+Open a terminal and navigate to this (EOSI-Bhatt-A-assgn01/part2) folder
+
+How to make?
+Run the Makefile command to generate the binaries for kernel module and the test program
+To run the Makefile, type "make" in the terminal after navigating to this folder.
+
+How to run?
+1) Copy the binaries(namely rbt530_drv.ko, rbprobe_drv.ko, rbprobe_tester and rbt530_tester) to Intel Galileo Gen2 Board.
+   To copy, you can use the scp command. For example,
+	scp rbt530_drv.ko rbt530_tester rbprobe_drv.ko rbprobe_tester root@192.168.1.5:/home/root
+
+2) Insert the kernel modules using insmod in the following order
+	insmod /home/root/rbt530_drv.ko
+	insmod /home/root/rbprove_drv.ko
+   This will create two device files due to rbt530_drv in the /dev folder
+	and one device file due to rbprove_drv.ko
+
+3) Run rbt530_tester to test the device driver rbt530_drv.ko
+	/home/root/rbt530_tester
+
+4) Run rbprobe_tester to insert probes in rbt530.
+	/home/root/rbprobe_tester /dev/rbprobe_dev <read_write_sel> <symbol_select> <reg_unreg_select> <offset>
+		<read_write_sel> - Can be "read" or "write"
+		If read_write_sel is set as "write" then three more parameters are to be passed:
+			<symbol_select> - Can be 0 for rbt530_read OR 1 for rbt530_write
+			<reg_unreg_select> - Can be 1 to register the probe OR 0 to unregister the probe
+			<offset> - Set this to 0 for proper functioning
+
+To remove the driver, type "rmmod <driver_filename>" in the terminal.
+
+Thank you

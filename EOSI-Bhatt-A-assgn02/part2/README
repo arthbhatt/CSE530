@@ -1,0 +1,37 @@
+Author: Arth Bhatt (ASU ID: 1215361875)
+
+Open a terminal and navigate to this (EOSI-Bhatt-A-assgn02/part2) folder
+
+How to make?
+Run the Makefile command to generate the binaries for kernel module and the test program
+To run the Makefile, type "make" in the terminal after navigating to this folder.
+
+How to run?
+1) Copy the binaries(namely hcsr_of_driver.ko, hcsr_of_driver.ko) to Intel Galileo Gen2 Board.
+   Also copy sysfs_test.sh to Intel Galileo Gen2 Board.
+   To copy, you can use the scp command. For example,
+	scp hcsr_of_driver.ko hcsr_of_driver.ko sysfs_test.sh root@192.168.1.5:/home/root
+
+2) Insert the kernel module using insmod
+	insmod hcsr_of_driver.ko
+	insmod hcsr_of_device.ko
+   This will generate sysfs interface in /sys/class/misc/ (Unable to create under /sys/class/HCSR/)
+   More number of devices can be created by using device_count parameter
+
+3) Run sysfs_test.sh to test the device driver
+	Check if it is executable or not. If not then run the following command:
+		chmod +x sysfs_test.sh
+
+To remove the driver, type "rmmod hcsr_of_driver.ko" in the terminal.
+
+Modifying the bash script:
+At the start of the script, different parameters can be configure such as the device_name, trigger_pin, echo_pin, m, delta.
+
+Known Issues:
+1) We have to insert platform driver before platform device, otherwise we get a core dump
+2) We have to wait for sometime before inserting the platform driver otherwise error is encountered
+3) Attribute files are not being created in /sys/class/HCSR/. This is because the device is not added to HCSR class. 
+	Searched for adding device to class (device_class, class_interface and class_simple) but these methods are not supported in for this kernel. 
+	Also dug in to device_create for this kernel but to no avail.
+
+Thank you
